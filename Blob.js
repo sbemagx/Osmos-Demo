@@ -154,7 +154,9 @@ Blob.prototype.moveTo = function(xy) {
 	// Modify our velocity with our bounce factor
 	var newVelocity = this.velocity.map(function(v, i) { return v*bounce[i]; });
 
+
 	// Actually update our position, velocity
+	this.lastPostion = this.position;
 	this.position = newPosition;
 	this.velocity = newVelocity;
 
@@ -162,7 +164,44 @@ Blob.prototype.moveTo = function(xy) {
 	return this.position;
 };
 
+space.addEventListener('click', spaceClick, false);
+function spaceClick(e) {
 
+	// new point!
+	var px = Math.round(me.position[0]);
+	var py = Math.round(me.position[1]);
+	var cx = event.offsetX;
+	var cy = event.offsetY;
+
+	// make a right triangle with px,cy
+	var o = Math.abs(cx - px);
+	var a = Math.abs(cy - py);
+	var offset = 0;
+
+	if ((cx > px) && (cy < py))
+	{
+	
+	}
+	if (cx > px && cy > py) {
+		console.log('BOOM');
+		offset = -180;
+	}
+	var angle = Math.abs(offset + toDegrees(Math.atan(o/a)));
+
+	console.log("angle: " + angle);
+
+	 // console.log('cx: ' + cx);
+	 // console.log('px: ' + px);
+	 // console.log('cy: ' + cy);
+	 // console.log('py: ' + py);
+	 // console.log('o:  ' + o);
+	 // console.log('a:  ' + a);	 	 
+
+	// var xDelta = event.offsetX  - me.position[0];
+	// console.log('deltaX:' + xDelta);
+	//me.eject(me.getMass()/2, me.velocity, 1);
+
+}
 
 /*****************************************************************************
 * Ejecting Blob(s)
@@ -177,9 +216,13 @@ Blob.prototype.eject = function(mass, speed, degrees) {
 
 	// Suggested flow:
 	// - Create a new blob
+	//function Blob(space, mass, position, velocity) {
+	new Blob(me._space, mass, [200,200], speed);
+
 	// - Place it adjacent to this blob
 	// - Place it adjacent to this blob, exiting at the right direction
 	// - Adjust the velocity of this blob appropriately
+	console.log("i've been ejected!");
 };
 
 
