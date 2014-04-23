@@ -225,20 +225,25 @@ Blob.prototype.eject = function(mass, speed, degrees) {
 	var position = [0,0];
 	if (cx > px && cy < py) {
 		position = [me.position[0]+opposite+(.35*r), me.position[1]-adjacent-(.35*r)];
+		speed[1] = 1.5/(me.position[0] - position[0]);
+		speed[0] = 1.5/(me.position[1] - position[1]);
 	}
 	if (cx > px && cy > py) {
 		position = [me.position[0]+opposite+(.35*r), me.position[1]+adjacent+(.35*r)];
+		speed[1] = -1.5/(me.position[0] - position[0]);
+		speed[0] = -1.5/(me.position[1] - position[1]);
 	}
 	else if (cx < px && cy > py) {
 		position = [me.position[0]+opposite-(.35*r), me.position[1]+adjacent+(.35*r)];
+		speed[1] = 1.5/(me.position[0] - position[0]);
+		speed[0] = 1.5/(me.position[1] - position[1]);
 	}
 	else if (cx < px && cy < py) {
 		position = [me.position[0]+opposite-(.35*r), me.position[1]-adjacent-(.35*r)];
+		speed[1] = -1.5/(me.position[0] - position[0]);
+		speed[0] = -1.5/(me.position[1] - position[1]);
 	}
 
-	// - Adjust the velocity of this blob appropriately
-	speed[0] = -1/(me.position[0] - position[0]);
-	speed[1] = -1/(me.position[1] - position[1]);
 	ejection = new Blob(me._space, mass, position, speed);
 };
 
