@@ -13,7 +13,7 @@ function Blob(space, mass, position, velocity) {
         });
 
     // If we don't have a velocity, initialize it as [0, 0]
-    this._velocity = velocity ? velocity : [0, 0];
+    this._velocity = velocity ? velocity : [.05, -.05];
 
     // Create a DOM element for our blob and style it (though it isn't yet added)
 	this._dom = document.createElement('div');
@@ -168,11 +168,11 @@ space.addEventListener('click', spaceClick, false);
 function spaceClick(e) {
 
 	// new point!
-	var px = Math.round(me.position[0]);
-	var py = Math.round(me.position[1]);
+	var px = me.position[0];
+	var py = me.position[1];
 	var cx = event.offsetX;
 	var cy = event.offsetY;
-
+	var newBlobVelocity = [0,0];
 	// make a right triangle with px,cy
 	var o = Math.abs(cx - px);
 	var a = Math.abs(cy - py);
@@ -184,11 +184,32 @@ function spaceClick(e) {
 		offset = 180;
 	}
 	else if (cx < px && cy < py) {
+		//quad 4
 		offset = -360;
+		if (me.velocity[0] > 0 && me.velocity[1] < 0) {
+			console.log("boom?");
+			newBlobVelocity[0] = me.velocity[0] * -1;
+			newBlobVelocity[1] = me.velocity[1];
+		}
+		if (me.velocity[0] > 0 && me.velocity[1] > 0) {
+			console.log("boom?let");
+			newBlobVelocity[0] = me.velocity[0] * -1;
+			newBlobVelocity[1] = me.velocity[1] * -1;
+		}
+		if (me.velocity[0] < 0 && me.velocity[1] < 0) {
+			console.log("boom?diddy");
+			newBlobVelocity[0] = me.velocity[0] * 1.5;
+			newBlobVelocity[1] = me.velocity[1] * 1.5;
+		}
+		if (me.velocity[0] < 0 && me.velocity[1] > 0) {
+			console.log("bddy");
+			newBlobVelocity[0] = me.velocity[0] * 1;
+			newBlobVelocity[1] = me.velocity[1] * -1;
+		}									
 	}
 
-	var angle = Math.round(Math.abs(offset + toDegrees(Math.atan(o/a))));
-	me.eject(me.getMass()/2, me.velocity, toRadians(angle));
+	var angle = Math.abs(offset + toDegrees(Math.atan(o/a)));
+	me.eject(me.getMass()/5, newBlobVelocity, toRadians(angle));
 
 }
 
@@ -215,8 +236,8 @@ Blob.prototype.eject = function(mass, speed, degrees) {
 
 	// adjust for click quadrant, adding or subtacting x and y values to determine position of new blob
 	// there must be a more elegant way to do this.
-	var px = Math.round(me.position[0]);
-	var py = Math.round(me.position[1]);
+	var px = me.position[0];
+	var py = me.position[1];
 	var cx = event.offsetX;
 	var cy = event.offsetY;
 
@@ -239,7 +260,7 @@ Blob.prototype.eject = function(mass, speed, degrees) {
 	//function Blob(space, mass, position, velocity) {
 	// - Place it adjacent to this blob
 	// - Place it adjacent to this blob, exiting at the right direction
-	new Blob(me._space, mass, position, speed);
+	ejection = new Blob(me._space, mass, position, speed);
 
 	// - Adjust the velocity of this blob appropriately
 

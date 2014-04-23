@@ -45,8 +45,14 @@
 		var dt = 20;
 		var me;
 		window.onload = function() {
+			var space = new Space();
 			me = new Blob();
-			window.setInterval(function() { me.simulate(dt); me.redrawBlob(); }, dt);
+			window.setInterval(function() { 
+				for (i=0; i < me._space._blobs.length; i++) {
+					me._space._blobs[i].simulate(dt); 
+					me._space._blobs[i].redrawBlob(); 
+				}
+			}, dt);
 		};
 	</script>
 </body>
