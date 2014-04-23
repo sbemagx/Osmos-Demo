@@ -177,16 +177,16 @@ function spaceClick(e) {
 	var o = Math.abs(cx - px);
 	var a = Math.abs(cy - py);
 	var offset = 0;
-
-	if ((cx > px) && (cy < py))
-	{
-	
-	}
 	if (cx > px && cy > py) {
-		console.log('BOOM');
 		offset = -180;
 	}
-	var angle = Math.abs(offset + toDegrees(Math.atan(o/a)));
+	else if (cx < px && cy > py) {
+		offset = 180;
+	}
+	else if (cx < px && cy < py) {
+		offset = -360;
+	}
+	var angle = Math.round(Math.abs(offset + toDegrees(Math.atan(o/a))));
 
 	console.log("angle: " + angle);
 
