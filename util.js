@@ -20,3 +20,6 @@ Array.prototype.equals = function (array) {
     // If we get to the end, we've checked all the elements
     return true;
 };
+function logVar(name, x) {
+    console.log(name + ": " + x);
+}
