@@ -186,20 +186,9 @@ function spaceClick(e) {
 	else if (cx < px && cy < py) {
 		offset = -360;
 	}
+
 	var angle = Math.round(Math.abs(offset + toDegrees(Math.atan(o/a))));
-
-	console.log("angle: " + angle);
-
-	 // console.log('cx: ' + cx);
-	 // console.log('px: ' + px);
-	 // console.log('cy: ' + cy);
-	 // console.log('py: ' + py);
-	 // console.log('o:  ' + o);
-	 // console.log('a:  ' + a);	 	 
-
-	// var xDelta = event.offsetX  - me.position[0];
-	// console.log('deltaX:' + xDelta);
-	//me.eject(me.getMass()/2, me.velocity, 1);
+	me.eject(me.getMass()/2, me.velocity, toRadians(angle));
 
 }
 
@@ -208,21 +197,52 @@ function spaceClick(e) {
 */
 
 Blob.prototype.eject = function(mass, speed, degrees) {
+
 	// This function should create new blob of mass mass, ejecting from this
 	// blob at an angle of degrees with speed speed
 
 	// This blob should increase in speed away from the ejected blob, 
 	// proportional to the ejected mass*speed
 
+	// determine the position of the new blob
+	// the radius is the hypotenuse
+	// opp = sin(a) * hyp
+	var r = me.radius;
+	var opposite = Math.sin(degrees) * r;
+
+	// use pythagorean theorem to get the other length
+	var adjacent = Math.sqrt(Math.pow(r, 2) - Math.pow(opposite,2));
+
+	// adjust for click quadrant, adding or subtacting x and y values to determine position of new blob
+	// there must be a more elegant way to do this.
+	var px = Math.round(me.position[0]);
+	var py = Math.round(me.position[1]);
+	var cx = event.offsetX;
+	var cy = event.offsetY;
+
+	var position = [0,0];
+	if (cx > px && cy < py) {
+		position = [me.position[0]+opposite+(.5*r), me.position[1]-adjacent-(.5*r)];
+	}
+	if (cx > px && cy > py) {
+		position = [me.position[0]+opposite+(.5*r), me.position[1]+adjacent+(.5*r)];
+	}
+	else if (cx < px && cy > py) {
+		position = [me.position[0]+opposite-(.5*r), me.position[1]+adjacent+(.5*r)];
+	}
+	else if (cx < px && cy < py) {
+		position = [me.position[0]+opposite-(.5*r), me.position[1]-adjacent-(.5*r)];
+	}
+
 	// Suggested flow:
 	// - Create a new blob
 	//function Blob(space, mass, position, velocity) {
-	new Blob(me._space, mass, [200,200], speed);
-
 	// - Place it adjacent to this blob
 	// - Place it adjacent to this blob, exiting at the right direction
+	new Blob(me._space, mass, position, speed);
+
 	// - Adjust the velocity of this blob appropriately
-	console.log("i've been ejected!");
+
 };
 
 
