@@ -13,7 +13,7 @@ function Blob(space, mass, position, velocity) {
         });
 
     // If we don't have a velocity, initialize it as [0, 0]
-    this._velocity = velocity ? velocity : [.01, .01];
+    this._velocity = velocity ? velocity : [.00, .00];
 
     // Create a DOM element for our blob and style it (though it isn't yet added)
 	this._dom = document.createElement('div');
@@ -210,7 +210,7 @@ function spaceClick(e) {
 	}
 
 	var angle = Math.abs(offset + toDegrees(Math.atan(o/a)));
-	me.eject(me.getMass()/5, newBlobVelocity, toRadians(angle));
+	me.eject(me.getMass()/6, newBlobVelocity, toRadians(angle));
 
 }
 
