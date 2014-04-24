@@ -44,15 +44,6 @@ Blob.prototype.redrawBlob = function() {
 	this._dom.style.width  = 2 * this.radius;
 	this._dom.style.height = 2 * this.radius;
 	this._dom.style.borderRadius = this.radius; // Make it a circle
-	this._dom.style.opacity = (Math.random(5)+5)/10;
-	// Set a background-color ranging from pure red to pure blue depending on
-	// its size relative to Blob.defaultMaxMass
-	var backgroundColor = 'rgb(' + [
-        255 * (1 - this.getMass() / Blob.defaultMaxMass),
-        0,
-        255 * (this.getMass() / Blob.defaultMaxMass) 
-        ].map(Math.round).join(',') + ')';
-	this._dom.style.backgroundColor =  backgroundColor;
 };
 
 

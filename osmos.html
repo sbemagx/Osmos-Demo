@@ -46,10 +46,12 @@
 		var me;
 		window.onload = function() {
 			me = new Blob();
+			me.setColor("#rgb(190,200,200)");
 			window.setInterval(function() { 
 				for (i=0; i < me._space._blobs.length; i++) {
 					me._space._blobs[i].simulate(dt); 
 					me._space._blobs[i].redrawBlob(); 
+					me._space._blobs[i].shrink(); 					
 				}
 			}, dt);
 		};
