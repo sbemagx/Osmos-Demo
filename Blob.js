@@ -233,29 +233,38 @@ Blob.prototype.eject = function(mass, speed, degrees) {
 	var cy = event.offsetY;
 
 	// adjust the position of the new blob in relation to where on the cavas the click and blob are
+	var speedx = 1;
 	var position = [0,0];
-	if (cx > px && cy < py) {
-		position = [me.position[0]+opposite+(.35*r), me.position[1]-adjacent-(.35*r)];
-		speed[1] = 1.5/(me.position[0] - position[0]);
-		speed[0] = 1.5/(me.position[1] - position[1]);
+	if (cx >= px && cy <= py) {
+		position = [me.position[0]+opposite+3, me.position[1]-adjacent-3];
 	}
-	if (cx > px && cy > py) {
-		position = [me.position[0]+opposite+(.35*r), me.position[1]+adjacent+(.35*r)];
-		speed[1] = -1.5/(me.position[0] - position[0]);
-		speed[0] = -1.5/(me.position[1] - position[1]);
+	if (cx >= px && cy >= py) {
+		position = [me.position[0]+opposite+3, me.position[1]+adjacent+3];
+		speedx = -1;
 	}
-	else if (cx < px && cy > py) {
-		position = [me.position[0]+opposite-(.35*r), me.position[1]+adjacent+(.35*r)];
-		speed[1] = 1.5/(me.position[0] - position[0]);
-		speed[0] = 1.5/(me.position[1] - position[1]);
+	else if (cx <= px && cy >= py) {
+		position = [me.position[0]+opposite-3, me.position[1]+adjacent+3];
 	}
-	else if (cx < px && cy < py) {
-		position = [me.position[0]+opposite-(.35*r), me.position[1]-adjacent-(.35*r)];
-		speed[1] = -1.5/(me.position[0] - position[0]);
-		speed[0] = -1.5/(me.position[1] - position[1]);
+	else if (cx <= px && cy <= py) {
+		position = [me.position[0]+opposite-3, me.position[1]-adjacent-3];
+		speedx = -1;
 	}
 
+	// set the speed of the child blob
+	speed[1] = (.5/(me.position[0] - position[0])) * speedx;
+	speed[0] = (.5/(me.position[1] - position[1])) * speedx;
+
+
+	var xd = me.position[0] - position[0];
+	var yd = me.position[1] - position[1];
+	var largest = Math.max(Math.abs(xd),Math.abs(yd));
+
+	//me.velocity[0] += (xd/largest)/20;
+	//me.velocity[1] += (yd/largest)/20;	
+
 	ejection = new Blob(me._space, mass, position, speed);
+	ejection.fade = 1;
+	ejection.color=("rgb(100,100,100)");
 };
 
 
