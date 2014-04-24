@@ -22,6 +22,16 @@ function Blob(space, mass, position, velocity) {
 
 	// Add our Blob to the Space
 	this._space.addBlob(this);
+	
+	// set initial blobs not to fade
+	this.fade = 0;
+
+	var backgroundColor = 'rgb(' + [
+    255 * (1 - this.getMass() / Blob.defaultMaxMass),
+    100,
+    255 * (this.getMass() / Blob.defaultMaxMass) 
+    ].map(Math.round).join(',') + ')';
+	this._dom.style.backgroundColor =  backgroundColor;
 }
 
 // The largest mass we'll initialize a Blob randomly with; note the absence of 
@@ -44,6 +54,7 @@ Blob.prototype.redrawBlob = function() {
 	this._dom.style.width  = 2 * this.radius;
 	this._dom.style.height = 2 * this.radius;
 	this._dom.style.borderRadius = this.radius; // Make it a circle
+	this._dom.style.opacity = (Math.random(3)+7)/10;
 };
 
 
@@ -77,6 +88,18 @@ Object.defineProperty(Blob.prototype, 'radius', {
 Blob.prototype.getRadius = function() {
 	return Blob.radiusFromMass(this.getMass());
 };
+
+/*****************************************************************************
+* Handling our color
+*/
+
+Object.defineProperty(Blob.prototype, 'color', {
+	get: function() { return this.getColor(); },
+	set: function(m) { this.setColor(m); }
+});
+
+Blob.prototype.getColor = function() { return this._dom.style.backgroundColor; };
+Blob.prototype.setColor = function(color) { this._dom.style.backgroundColor= color };
 
 
 
@@ -245,8 +268,11 @@ Blob.prototype.eject = function(mass, speed, degrees) {
 		speed[1] = -1.5/(me.position[0] - position[0]);
 		speed[0] = -1.5/(me.position[1] - position[1]);
 	}
+	me.velocity[0] = me.velocity[0] + .5/(me.position[0] - position[0]);
+	me.velocity[1] = me.velocity[1] + .5/(me.position[1] - position[1]);	
 
 	ejection = new Blob(me._space, mass, position, speed);
+	ejection.fade = 1;
 };
 
 
@@ -262,3 +288,18 @@ Blob.prototype.simulate = function(dt) {
 	});
 	this.moveTo(newPosition);
 };
+
+/*****************************************************************************
+* Make our child blobs fade away
+*/
+
+Blob.prototype.shrink = function() {
+	if (this.fade) {
+		if (this.mass > 0) {
+			this.mass -= this.mass/5;
+		}
+		else {
+			//this._space.removeBlob(this);
+		}
+	}
+}
