@@ -23,14 +23,10 @@ function Blob(space, mass, position, velocity) {
 	// Add our Blob to the Space
 	this._space.addBlob(this);
 	
-	// set initial blobs not to fade
+	// set blobs not to fade
 	this.fade = 0;
 
-	var backgroundColor = 'rgb(' + [
-    255 * (1 - this.getMass() / Blob.defaultMaxMass),
-    100,
-    255 * (this.getMass() / Blob.defaultMaxMass) 
-    ].map(Math.round).join(',') + ')';
+	var backgroundColor = 'rgb(191,10,100)';
 	this._dom.style.backgroundColor =  backgroundColor;
 }
 
@@ -273,6 +269,7 @@ Blob.prototype.eject = function(mass, speed, degrees) {
 
 	ejection = new Blob(me._space, mass, position, speed);
 	ejection.fade = 1;
+	ejection.color=("rgb(100,100,100)");
 };
 
 
